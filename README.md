@@ -18,11 +18,11 @@ A modern, aesthetic **student registration form** built with **HTML, CSS and Jav
 - **Form Fields (All Required)**  
   1. Full name  
   2. E-mail  
-  3. Phone (minimum 10 digits)  
-  4. Date of Birth (DD/MM/YYYY format)  
-  5. Address (minimum 8 characters)  
-  6. Course selection (dropdown: Cyber Security, Cloud Computing, Machine Learning, Trading, Full Stack, Editing)  
-  7. Short bio (minimum 10 characters)
+  3. Phone   
+  4. Date of Birth  
+  5. Address  
+  6. Course selection  
+  7. Short bio 
 
 - **Validation**
   - Uses HTML5 validation + custom checks:
