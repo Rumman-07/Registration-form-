@@ -51,5 +51,9 @@ A modern, aesthetic **student registration form** built with **HTML, CSS and Jav
 ---
 ## 🔗 Link 🔗 
 ---
-https://rumman-07.github.io/Registration-form-/
+### https://rumman-07.github.io/Registration-form-/
+
+or
+
+### https://rummanform07.netlify.app/
 ---
