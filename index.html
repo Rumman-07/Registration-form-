@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registration Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top, #3b0d16 0, #170013 55%, #050008 100%);
+      --card-bg: rgba(24, 6, 13, 0.8);
+      --card-border: rgba(248, 113, 113, 0.5);
+      --text-color: #fee2e2;
+      --muted-text: #fecaca;
+      --accent: #dc143c; /* crimson */
+      --accent-soft: rgba(220, 20, 60, 0.2);
+      --input-bg: rgba(15, 4, 9, 0.9);
+      --error-color: #fecaca;
+    }
+
+    body.light-theme {
+      --bg-gradient: radial-gradient(circle at top, #ffe4e6 0, #fee2e2 40%, #fecaca 100%);
+      --card-bg: rgba(255, 241, 242, 0.9);
+      --card-border: rgba(248, 113, 113, 0.7);
+      --text-color: #3b0d16;
+      --muted-text: #9f1239;
+      --accent: #b91c1c;
+      --accent-soft: rgba(239, 68, 68, 0.18);
+      --input-bg: rgba(255, 247, 248, 0.98);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-image: var(--bg-gradient);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: background 0.5s ease, color 0.3s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .wrapper {
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border-radius: 26px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 26px 26px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      opacity: 0.4;
+      background: radial-gradient(circle at 0 0, var(--accent-soft) 0, transparent 60%),
+                  radial-gradient(circle at 100% 100%, rgba(248, 113, 113, 0.22) 0, transparent 60%);
+      z-index: -1;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .title-block h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .title-block p {
+      font-size: 0.86rem;
+      color: var(--muted-text);
+      margin-top: 4px;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(24, 6, 13, 0.9);
+      border: 1px solid rgba(248, 113, 113, 0.75);
+      cursor: pointer;
+      font-size: 0.78rem;
+      user-select: none;
+      transition: background 0.3s ease, transform 0.1s ease, border-color 0.3s ease;
+      color: var(--text-color);
+    }
+
+    body.light-theme .theme-toggle {
+      background: rgba(255, 241, 242, 0.96);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .toggle-pill {
+      position: relative;
+      width: 34px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(24, 6, 13, 0.95);
+      border: 1px solid rgba(248, 113, 113, 0.9);
+      flex-shrink: 0;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    body.light-theme .toggle-pill {
+      background: rgba(255, 247, 248, 0.98);
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(248, 113, 113, 0.9);
+      transition: transform 0.28s ease;
+    }
+
+    body.light-theme .toggle-thumb {
+      transform: translateX(14px);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 18px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 640px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .full-row {
+      grid-column: 1 / -1;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .hint {
+      font-size: 0.7rem;
+      color: var(--muted-text);
+    }
+
+    input,
+    select,
+    textarea {
+      border-radius: 14px;
+      border: 1px solid rgba(254, 202, 202, 0.75);
+      padding: 9px 11px;
+      font: inherit;
+      background: var(--input-bg);
+      color: var(--text-color);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(254, 202, 202, 0.9);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 88px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.65);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      margin-top: 6px;
+      grid-column: 1 / -1;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 0;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      background: linear-gradient(135deg, #dc143c, #f97373);
+      color: #fff1f2;
+      cursor: pointer;
+      box-shadow: 0 16px 32px rgba(220, 38, 38, 0.55);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      box-shadow: 0 20px 38px rgba(220, 38, 38, 0.7);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+      box-shadow: 0 14px 26px rgba(220, 38, 38, 0.55);
+    }
+
+    /* Red highlight on invalid when focused */
+    input:focus:invalid,
+    textarea:focus:invalid,
+    select:focus:invalid {
+      border-color: var(--error-color);
+      box-shadow: 0 0 0 1px rgba(254, 202, 202, 0.9);
+    }
+
+    /* WATERMARK (bottom-right) */
+    .watermark {
+      position: fixed;
+      right: 16px;
+      top: 10px;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      color: var(--muted-text);
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="dark-theme">
+  <div class="wrapper">
+    <div class="glass-card">
+      <div class="header-row">
+        <div class="title-block">
+          <h1>Student Registration Form</h1>
+          <p>Enter your details and choose your course to get started.</p>
+        </div>
+        <button id="themeToggle" type="button" class="theme-toggle">
+          <div class="toggle-pill">
+            <div class="toggle-thumb"></div>
+          </div>
+          <span id="themeLabel">Dark Mode</span>
+        </button>
+      </div>
+
+      <form id="registrationForm" novalidate>
+        <div class="form-group full-row">
+          <label for="fullName">Full name *</label>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail *</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone *</label>
+          <span class="hint">Minimum 10 digits</span>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="9876543210"
+            minlength="10"
+            pattern="\d{10,}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="dob">Date of Birth *</label>
+          <span class="hint">Format: DD/MM/YYYY</span>
+          <input
+            type="text"
+            id="dob"
+            name="dob"
+            placeholder="25/11/2005"
+            pattern="\d{2}/\d{2}/\d{4}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="course">Select course *</label>
+          <select id="course" name="course" required>
+            <option value="" disabled selected hidden>Choose a course</option>
+            <option value="Cyber Security">Cyber Security</option>
+            <option value="Cloud Computing">Cloud Computing</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Trading">Trading</option>
+            <option value="Full Stack">Full Stack</option>
+            <option value="Editing">Editing</option>
+          </select>
+        </div>
+
+        <div class="form-group full-row">
+          <label for="address">Address *</label>
+          <span class="hint">Minimum 8 characters</span>
+          <textarea
+            id="address"
+            name="address"
+            placeholder="House / Street / City"
+            minlength="8"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group full-row">
+          <label for="bio">Short bio *</label>
+          <span class="hint">Minimum 10 characters</span>
+          <textarea
+            id="bio"
+            name="bio"
+            placeholder="Tell us a bit about yourself..."
+            minlength="10"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN PAGE WATERMARK: change text here -->
+  <div class="watermark">© Rumman • RAK</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const body = document.body;
+      const themeToggle = document.getElementById("themeToggle");
+      const themeLabel = document.getElementById("themeLabel");
+
+      // Theme toggle (crimson dark / light)
+      themeToggle.addEventListener("click", () => {
+        body.classList.toggle("light-theme");
+        body.classList.toggle("dark-theme");
+
+        if (body.classList.contains("light-theme")) {
+          themeLabel.textContent = "Light Mode";
+        } else {
+          themeLabel.textContent = "Dark Mode";
+        }
+      });
+
+      const form = document.getElementById("registrationForm");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // HTML5 validation
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const dobInput = document.getElementById("dob");
+        const dobValue = dobInput.value.trim();
+        const dobPattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+        if (!dobPattern.test(dobValue)) {
+          alert("Please enter Date of Birth in DD/MM/YYYY format.");
+          dobInput.focus();
+          return;
+        }
+
+        // Simple date validity check
+        const [, dd, mm, yyyy] = dobValue.match(dobPattern) || [];
+        const day = parseInt(dd, 10);
+        const month = parseInt(mm, 10);
+        const year = parseInt(yyyy, 10);
+        const jsDate = new Date(year, month - 1, day);
+        if (
+          jsDate.getFullYear() !== year ||
+          jsDate.getMonth() !== month - 1 ||
+          jsDate.getDate() !== day
+        ) {
+          alert("Please enter a valid date of birth.");
+          dobInput.focus();
+          return;
+        }
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const course = document.getElementById("course").value;
+        const bio = document.getElementById("bio").value.trim();
+
+        // Open a fresh, clean page to display submitted info
+        const resultWindow = window.open("", "_blank");
+        if (!resultWindow) {
+          alert("Please allow pop-ups to view submitted information.");
+          return;
+        }
+
+        const isLight = body.classList.contains("light-theme");
+
+        // Result page HTML with WATERMARK
+        resultWindow.document.write(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Submitted Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top, #3b0d16 0, #170013 55%, #050008 100%);
+      --card-bg: rgba(24, 6, 13, 0.9);
+      --card-border: rgba(248, 113, 113, 0.7);
+      --text-color: #fee2e2;
+      --muted-text: #fecaca;
+      --accent: #dc143c;
+      --accent-soft: rgba(220, 20, 60, 0.2);
+    }
+    body.light {
+      --bg-gradient: radial-gradient(circle at top, #ffe4e6 0, #fee2e2 40%, #fecaca 100%);
+      --card-bg: rgba(255, 241, 242, 0.98);
+      --card-border: rgba(248, 113, 113, 0.9);
+      --text-color: #3b0d16;
+      --muted-text: #9f1239;
+      --accent: #b91c1c;
+      --accent-soft: rgba(239, 68, 68, 0.2);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: var(--bg-gradient);
+      color: var(--text-color);
+      padding: 24px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .result-card {
+      max-width: 560px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 26px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 26px 45px rgba(0, 0, 0, 0.7);
+      padding: 26px 26px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-card::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      opacity: 0.35;
+      background: radial-gradient(circle at 0 0, var(--accent-soft) 0, transparent 60%),
+                  radial-gradient(circle at 100% 100%, var(--accent-soft) 0, transparent 60%);
+      z-index: -1;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 0.87rem;
+      color: var(--muted-text);
+      margin-bottom: 14px;
+    }
+    .divider {
+      height: 1px;
+      width: 100%;
+      background: linear-gradient(to right, transparent, var(--card-border), transparent);
+      margin-bottom: 12px;
+    }
+    .item {
+      margin-bottom: 7px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    .item span.label {
+      font-weight: 500;
+    }
+    .tag {
+      margin-top: 14px;
+      font-size: 0.78rem;
+      color: var(--muted-text);
+    }
+    /* RESULT PAGE WATERMARK */
+    .watermark {
+      position: fixed;
+      right: 16px;
+      top: 10px;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      color: var(--muted-text);
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="${isLight ? "light" : ""}">
+  <div class="result-card">
+    <h1>Submitted Details</h1>
+    <p class="subtitle">Thank you for registering. Here is a summary of your information.</p>
+    <div class="divider"></div>
+    <div class="item"><span class="label">Full name:</span> <span id="nameValue"></span></div>
+    <div class="item"><span class="label">E-mail:</span> <span id="emailValue"></span></div>
+    <div class="item"><span class="label">Phone:</span> <span id="phoneValue"></span></div>
+    <div class="item"><span class="label">Date of Birth:</span> <span id="dobValue"></span></div>
+    <div class="item"><span class="label">Address:</span> <span id="addressValue"></span></div>
+    <div class="item"><span class="label">Course:</span> <span id="courseValue"></span></div>
+    <div class="item"><span class="label">Short bio:</span> <span id="bioValue"></span></div>
+    <p class="tag">✅ Your information has been captured successfully.</p>
+  </div>
+
+  <!-- RESULT PAGE WATERMARK: change text here -->
+  <div class="watermark">© Rumman • RAK</div>
+</body>
+</html>
+        `);
+
+        resultWindow.document.close();
+
+        // Safely set text content in the new page
+        const setText = (id, value) => {
+          const el = resultWindow.document.getElementById(id);
+          if (el) el.textContent = value;
+        };
+
+        setText("nameValue", fullName);
+        setText("emailValue", email);
+        setText("phoneValue", phone);
+        setText("dobValue", dobValue);
+        setText("addressValue", address);
+        setText("courseValue", course);
+        setText("bioValue", bio);
+      });
+    });
+  </script>
+</body>
+</html>
